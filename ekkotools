@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+import sys
+from new_ad import *
+from new_user import *
+from Color import Color
+from Parameters import Parameters
+from ssh_tools import get_status, print_db, print_logs, refresh_documentation, restart_server, start_server
+from Globals import flags_list, short_flags_list
+from StudioTimeCrawler import StudioTimeCrawler
+
+
+# Print l'usage du programme
+def print_full_usage(binary_name):
+    print("USAGE : " + binary_name + " [prod || preprod] [OPTION]\n")
+    print_bold("Pour chaque commande, le flag -n peut être donné pour réaliser plusieurs fois une commande.")
+    print("Exemple : " + Color.GREEN + binary_name + " --new-ad -n 5" + Color.END + " Créera 5 nouvelles annonces\n")
+    print(
+        Color.BOLD + "\t--get-ip" + Color.END + " (-gi) : Print les ips du serveur de production et de pré-production\n")
+
+    print(
+        Color.BOLD + "\t--new-user" + Color.END + " (-nu) " + Color.UNDERLINE + "username email password" + Color.END + " : Création d'un nouvel utilisateur")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --new-user benGrc benjamingracia@gmail.com azeqsdazeqsd\n" + Color.END)
+
+    print(
+        Color.BOLD + "\t--new-ad" + Color.END + " (-na) " + Color.UNDERLINE + "username" + Color.END + " : Création d'une nouvelle annonce (Nécessite Firefox)")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --new-ad\n" + Color.END)
+
+    print(
+        Color.BOLD + "\t--get-status" + Color.END + " (-gs) " + Color.UNDERLINE + "environment" + Color.END + " : Affiche le statut des services ekko (docker ps)")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --get-status preprod\n" + Color.END)
+
+    print(
+        Color.BOLD + "\t--print-db" + Color.END + " (-pd) " + Color.UNDERLINE + "environment [announces, user]" + Color.END + " : Print le contenu des tables users et announces (ou juste users ou announces si donné en argument)")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --print-db preprod\n" + Color.END)
+
+    print(
+        Color.BOLD + "\t--print-logs" + Color.END + " (-pl) " + Color.UNDERLINE + "environment [api, db, client_web]" + Color.END + " : Print les logs d'un container. Si pas d'arguments, print les logs de tous les conteneurs")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --print-logs preprod api\n" + Color.END)
+
+    print(
+        Color.BOLD + "\t--refresh-doc" + Color.END + " (-rd) " + Color.UNDERLINE + "environment" + Color.END + " : Actualise la documentation des 3 plateformes")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --refresh-doc preprod\n" + Color.END)
+
+    print(
+        Color.BOLD + "\t--restart-server" + Color.END + " (-rs) " + Color.UNDERLINE + "environment" + Color.END + " : Redémarre les containers docker")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --restart-server preprod\n" + Color.END)
+
+    print(
+        Color.BOLD + "\t--start-server" + Color.END + " (-ss) " + Color.UNDERLINE + "environment" + Color.END + " : Démarre les containers docker (et restore la bdd si possible)")
+    print("\t\tExemple : "
+          + Color.GREEN + binary_name + " --start-server\n" + Color.END)
+
+
+# Print les ip des serveurs
+def get_ip(parameters) -> bool:
+    print("Prod :\t\t" + Color.BOLD + "104.45.80.119" + Color.END)
+    print("PreProd :\t" + Color.BOLD + "52.169.120.202" + Color.END)
+    return True
+
+
+# Point d'entrée d'exécution des commandes
+def exec_command(parameter: Parameters) -> bool:
+    fn_array = [get_ip, new_ad, new_user, get_status, print_db, print_logs, refresh_documentation, restart_server,
+                start_server]
+    fn_index = parameter.get_function_index()
+    for i in range(parameter.number):
+        res = fn_array[fn_index](parameter)
+        if res is False:
+            return False
+    return True
+
+
+# Main
+if __name__ == '__main__':
+    parameter = Parameters(sys.argv)
+    if parameter.has_valid_parameters():
+        exec_command(parameter)
+    else:
+        print_full_usage(sys.argv[0])

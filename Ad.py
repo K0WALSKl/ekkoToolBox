@@ -10,7 +10,7 @@ from library import requests
 # Contient toutes les infos nécessaires à la création d'une annonce
 class Ad:
     def __init__(self, user: User, studio_time_crawler: StudioTimeCrawler, parameters: Parameters):
-        self.environment = parameters.environment
+        self.base_url = parameters.get_url_from_parameter()
         self.token_user = user.token if user.token != "" else user.api_get_token()
         self.id_user = user.api_get_user_id()
         self.ad_id = ""
@@ -43,8 +43,7 @@ class Ad:
         global prod_url, preprod_url
 
         data = json.dumps(body)
-        url = (prod_url if self.environment == "prod" else preprod_url) + "/create"
-        # url = "http://localhost:8080/create"
+        url = self.base_url + "/create"
         # print(url)
         header = {
             'custom_auth': "authorization=Token " + self.token_user,

@@ -11,7 +11,7 @@ from StudioTimeCrawler import StudioTimeCrawler
 
 # Print l'usage du programme
 def print_full_usage(binary_name):
-    print("USAGE : " + binary_name + " [prod || preprod] [OPTION]\n")
+    print("USAGE : " + binary_name + " [local || preprod] [OPTION]\n")
     print_bold("Pour chaque commande, le flag -n peut être donné pour réaliser plusieurs fois une commande.")
     print("Exemple : " + Color.GREEN + binary_name + " --new-ad -n 5" + Color.END + " Créera 5 nouvelles annonces\n")
     print(

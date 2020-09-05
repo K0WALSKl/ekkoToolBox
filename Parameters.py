@@ -1,5 +1,5 @@
 from Color import *
-from Globals import short_flags_list, flags_list, required_argument_numbers_list
+from Globals import short_flags_list, flags_list, required_argument_numbers_list, prod_url, preprod_url
 
 
 # Parse et contient les arguments donnés
@@ -55,9 +55,19 @@ class Parameters:
         if self.command == "--get-ip" or self.command == "-gi":
             return "NOT_NECESSARY"
         for parameter in self.parameters:
-            if parameter == "prod" or parameter == "preprod":
+            if parameter == "prod" or parameter == "preprod" or parameter == "local":
                 return parameter
         return "prod"
+
+    def get_url_from_parameter(self):
+        global prod_url, preprod_url
+
+        if self.environment == "prod":
+            return prod_url
+        elif self.environment == "preprod":
+            return preprod_url
+        else:
+            return "http://localhost:8080"
 
     # Print l'instance de la classe Parameters
     def print_parameters(self):

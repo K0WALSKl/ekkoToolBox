@@ -23,7 +23,6 @@ def new_ad(parameters):
 
     print_success("Utilisateur trouvé")
     if not user.has_token():
-        print_warning("Pas de token, acquisition d'un nouveau token")
         res = user.api_get_token()
         if res is False:
             print_bold_error("Ce profil ne semble pas exister. Annulation")

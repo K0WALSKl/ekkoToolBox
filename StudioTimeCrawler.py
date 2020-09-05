@@ -26,12 +26,8 @@ def get_description_without_html_tags(description_with_html_tags) -> str:
 
 def generate_materiels():
     global materiels_list
-    return [
-        random.choice(materiels_list)
-        , random.choice(materiels_list)
-        , random.choice(materiels_list)
-        , random.choice(materiels_list)
-        , random.choice(materiels_list)]
+    return random.choice(materiels_list) + "," + random.choice(materiels_list) + "," + random.choice(materiels_list) + \
+           "," + random.choice(materiels_list) + "," + random.choice(materiels_list)
 
 
 def find_classes_that_starts_with(xpath, driver):
@@ -76,12 +72,20 @@ def get_random_full_address():
 
 def get_amenities_from_studio(driver):
     ad_sections_array = find_classes_that_starts_with(
-    "//*[starts-with(@class, 'section__root__')]", driver)
+        "//*[starts-with(@class, 'section__root__')]", driver)
 
     for section in ad_sections_array:
-        html_section = section.get_attribute('outerHTML')
-        print(html_section)
-    return 'Kitchen, Toilets'
+        html_section = section.get_attribute('innerHTML')
+        if html_section.find("Amenities") != -1:
+            html_section = html_section.replace("Amenities", "")
+            html_section = html_section.replace("... Show more", "")
+            p = re.compile(r'<.*?>')
+            html_section = p.sub('', html_section)
+            print_success(str(html_section))
+            return html_section
+            # .split(',')
+    print_warning("nope")
+    return "No amenities"
 
 
 class StudioTimeCrawler:
@@ -97,7 +101,7 @@ class StudioTimeCrawler:
         driver.get(studio_link)
         title = self.get_title_from_studio(driver)
         description = self.get_description_from_studio(driver)
-        studio_type = "Home studio"# A modifier si on veut autre chose
+        studio_type = "Home studio"  # A modifier si on veut autre chose
         availability_type = self.generate_availability_type()
         availability = self.generate_availability(availability_type)
         start_hour = self.generate_start_hour(availability_type)
@@ -207,7 +211,8 @@ class StudioTimeCrawler:
             if i == 0:
                 url = base_url + "/s/all?address=%C3%89tats-Unis&bounds=49.38%2C-66.94%2C25.82%2C-124.39"
             else:
-                url = base_url + "/s/all?address=%C3%89tats-Unis&bounds=49.38%2C-66.94%2C25.82%2C-124.39&page=" + str(i - 1)
+                url = base_url + "/s/all?address=%C3%89tats-Unis&bounds=49.38%2C-66.94%2C25.82%2C-124.39&page=" + str(
+                    i - 1)
 
             print_warning(url)
             driver.get(url)
@@ -218,8 +223,6 @@ class StudioTimeCrawler:
             print(studio_links)
             all_links.write("%s" % str(studio_links))
         all_links.close()
-
-
 
 
 def browser_not_chosen():

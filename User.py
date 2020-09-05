@@ -23,7 +23,7 @@ class User:
             self.email = credentials[1]
             self.password = "azeqsdazeqsd"
         if parameter:
-            self.base_url = "http://104.45.80.119:8080" if parameter.environment == "prod" else "http://52.169.120.202:8080"
+            self.base_url = parameter.get_url_from_parameter()
 
     # Fais une requête HTTP vers l'API pour créer un user
     # Si l'user est OK, les identifiants seront stockés dans
@@ -31,7 +31,6 @@ class User:
     # avec cet user
     def api_create_user(self) -> bool:
         url = self.base_url + "/subscribeUser"
-        # url = "http://localhost:8080/subscribeUser"
         data = {
             'username': self.username,
             'email': self.email,
@@ -56,7 +55,6 @@ class User:
 
     # Lance une requête POST de connexion à l'API pour récupérer un token
     def api_get_token(self):
-        # url = "http://localhost:8080/authUser"
         url = self.base_url + "/authUser"
         data = {
             'email': self.email,
@@ -113,7 +111,6 @@ class User:
     def api_create_profile(self, generated_profile=None):
         print("Création du profile...")
         profile = self.fetch_identity() if generated_profile is None else generated_profile
-        # URL = "http://localhost:8080/profile"
         url = self.base_url + "/profile"
         DATA = {
             'firstName': profile[0],
@@ -143,7 +140,6 @@ class User:
 
     # Récupère l'ID de l'utilisateur en fonction de son Token
     def api_get_user_id(self):
-        # URL = "http://localhost:8080/profile"
         url = self.base_url + "/profile"
         HEADER = {
             'custom_auth': "authorization=Token " + self.token
@@ -173,9 +169,8 @@ class User:
 
     # Récupère 2 hobbies aléatoire depuis le tableau de hobbies
     def choose_hobbies(self):
-        return [random.choice(hobbies_list)
-            , random.choice(hobbies_list)
-                ]
+        return [random.choice(hobbies_list),
+                random.choice(hobbies_list)]
 
     # Génère un user aléatoire (username, email). password = azeqsdazeqsd par défaut
     def generate_random_profile(self):

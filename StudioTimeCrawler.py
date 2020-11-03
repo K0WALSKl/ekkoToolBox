@@ -54,19 +54,19 @@ def get_price_from_studio(driver) -> int:
         "//*[starts-with(@class, 'ListingPage__desktopPriceValue__')]", driver
     )
     price = price_array[0].get_attribute("innerHTML").replace("$", "").split(".")[0]
-    return int(price)
+    return int(price.replace(",", ""))
 
 
 def get_picture_from_studio(driver):
     photo_array = find_classes_that_starts_with(
         "//*[starts-with(@class, 'ListingPage__rootForImage__')]", driver
     )
-    img = base64.b64decode(photo_array[0].screenshot_as_base64)
+    img = str(photo_array[0].screenshot_as_base64)
     return img
 
 
 def get_random_full_address():
-    lines = open('addr.csv').read().splitlines()
+    lines = open('/home/gwendhal/PycharmProjects/ekkoToolBox/addr.csv').read().splitlines()
     return random.choice(lines)
 
 

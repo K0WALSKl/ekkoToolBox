@@ -159,7 +159,7 @@ class User:
 
     # sauvegarde les identifiants dans un fichier (stored_user.txt)
     def store_user(self):
-        filepath = "stored_user.txt"
+        filepath = "/home/gwendhal/PycharmProjects/ekkoToolBox/stored_user.txt"
         file = open(filepath, "w")
         file.write(self.username + "\n" + self.email + "\n" + self.password + "\n")
 

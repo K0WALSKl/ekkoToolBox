@@ -7,7 +7,7 @@ from Parameters import Parameters
 # Récupère les credentials contenu dans le fichier stored_user.txt
 # Return un tableau sous la forme [username, email, password] (str[])
 def get_stored_user() -> list:
-    filepath = "stored_user.txt"
+    filepath = "/home/gwendhal/PycharmProjects/ekkoToolBox/stored_user.txt"
     user_credentials = ["", "", ""]
 
     if not path.exists(filepath):

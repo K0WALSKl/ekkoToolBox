@@ -121,7 +121,7 @@ class User:
             ],
             'email': self.email,
             'website': profile[3],
-            'summary': profile[4]
+            'summary': profile[4],
         }
         HEADER = {
             'custom_auth': "authorization=Token " + self.token
